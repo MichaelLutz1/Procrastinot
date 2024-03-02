@@ -1,7 +1,7 @@
 import time
 class Node:
     text = ""
-    timestamp= ""
+    timestamp = ""
     
 
     def __init__(self, text, timestamp = time.ctime()):

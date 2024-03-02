@@ -1,13 +1,26 @@
 from PIL import ImageGrab
 import pytesseract
+import pygame
 import time
 from pynput import mouse
 from LinkedList import LinkedList
 import Node
+import Levenshtein
 
 top_left = bottom_right = None
 textType = ""
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
+'''
+pygame.init()
+clock = pygame.time.Clock()
+screenWidth = 1000
+screenHeight = 500
+screen = pygame.display.set_mode((screenWidth, screenHeight))
+backRect = pygame.Rect(0, 0, screenWidth, screenHeight)
+backSurface = pygame.Surface((screenWidth, screenHeight))
+backSurface.fill((0, 0, 0))
+'''
 
 def on_click(x, y, button, pressed):
     global top_left, bottom_right
@@ -26,7 +39,7 @@ def screen_to_text(top_left, bottom_right):
     screenshot = ImageGrab.grab(
         bbox=(top_left[0], top_left[1], bottom_right[0], bottom_right[1]))
     text = pytesseract.image_to_string(screenshot)
-    print(text)
+    return text
 
 def start():
     global textType
@@ -36,6 +49,15 @@ def start():
             print("Invalid input, please try again\n")
 
     main()
+
+#If a chain of consecutive nodes has the same text, this is considered inactive time. Otherwise if a node has the same text as another node after having lots of variation in between, changes have been undone and the nodes between can be deleted.
+def checkChangeRevert(linkedList, currText):
+    currNode = linkedList.getFirst()
+    while(currNode != None):
+        similarity = Levenshtein.ratio(currText, currNode.text)
+        print(similarity)
+
+        currNode = currNode.next
 
 
 def main():
@@ -47,12 +69,30 @@ def main():
         #screen_to_text(top_left, bottom_right)
         #time.sleep(5)
 
-    linkedList = LinkedList("1")
-    linkedList.insertFirst("2")
-    linkedList.insertFirst("3")
+    linkedList = LinkedList("Hi")
+    linkedList.insertFirst("ihi")
+    linkedList.insertFirst("hiiiiiiiiiiiiiii")
     linkedList.printList()
-    linkedList.pop()
-    linkedList.printList()
+    #linkedList.pop()
+    #linkedList.printList()
+    checkChangeRevert(linkedList, "hi")
 
+    '''
+    running = True
+    while(True):
+        for event in pygame.event.get():
+            if(event.type == pygame.QUIT):
+                running = False
+
+        screen.blit(backSurface, (0, 0))
+        font = pygame.font.Font(None, 32)
+        text = font.render(screen_to_text(top_left, bottom_right), True, "green")
+        textRect = text.get_rect()
+        screen.blit(text, textRect)
+         
+        pygame.display.update()
+        clock.tick(30)
+    '''
+    
 
 start()
