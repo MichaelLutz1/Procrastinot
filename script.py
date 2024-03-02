@@ -1,10 +1,18 @@
 from PIL import ImageGrab
 import pytesseract
+import time
 
-# Take a screenshot of the entire screen
-screenshot = ImageGrab.grab()
-print(pytesseract.image_to_string(screenshot))
-# Save the screenshot to a file
 
-# Display the screenshot
-screenshot.show()
+def screen_to_text():
+    screenshot = ImageGrab.grab()
+    text = pytesseract.image_to_string(screenshot)
+    print(text)
+
+
+def main():
+    while True:
+        screen_to_text()
+        time.sleep(5)
+
+
+main()
