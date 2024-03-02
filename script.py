@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 top_left = bottom_right = None
 textType = ""
-# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
 '''
@@ -43,7 +43,6 @@ def on_click(x, y, button, pressed):
 previous_text = ""
 
 def screen_to_text(top_left, bottom_right):
-    global previous_text
     screenshot = ImageGrab.grab(
         bbox=(top_left[0], top_left[1], bottom_right[0], bottom_right[1]))
     text = pytesseract.image_to_string(screenshot)
@@ -65,17 +64,21 @@ def checkChangeRevert(linkedList, currText):
     while(currNode != None):
         similarity = Levenshtein.ratio(currText, currNode.text)
         print(similarity)
-
         currNode = currNode.next
 
 
 def main():
-    # with mouse.Listener(
-    #         on_click=on_click,
-    # ) as listener:
-    #     listener.join()
+    with mouse.Listener(
+            on_click=on_click,
+    ) as listener:
+        listener.join()
+
+    linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while True:
-        screen_to_text(top_left, bottom_right)
+        currText = screen_to_text(top_left, bottom_right)
+        checkChangeRevert(linkedList, currText)
+        linkedList.insertFirst(currText)
+        print(currText)
         time.sleep(5)
 
     linkedList = LinkedList("Hi")
@@ -102,7 +105,7 @@ def main():
         pygame.display.update()
         clock.tick(30)
     '''
-    
+#start() ####
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -121,3 +124,5 @@ def get_text():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=2400, debug=True)
+
+
