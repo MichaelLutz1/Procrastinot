@@ -22,6 +22,8 @@ class LinkedList:
         self.last = self.last.prev
         self.last.next = None
 
+    def getFirst(self):
+        return self.first
         
 
     def printList(self):
