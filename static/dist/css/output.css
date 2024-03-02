@@ -544,12 +544,32 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.custom-button {
+  /* Add your custom styles here */
+  border-radius: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+  transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #45a049;
+  /* Darker Green */
+}
+
 .flex {
   display: flex;
 }
 
-.flex-col {
-  flex-direction: column;
+.resize {
+  resize: both;
 }
 
 .rounded {
