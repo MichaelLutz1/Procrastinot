@@ -6,6 +6,7 @@ from pynput import mouse
 from LinkedList import LinkedList
 import Node
 import Levenshtein
+import Levenshtein
 
 top_left = bottom_right = None
 textType = ""
@@ -34,8 +35,10 @@ def on_click(x, y, button, pressed):
     if not pressed:
         return True
 
+previous_text = ""
 
 def screen_to_text(top_left, bottom_right):
+    global previous_text
     screenshot = ImageGrab.grab(
         bbox=(top_left[0], top_left[1], bottom_right[0], bottom_right[1]))
     text = pytesseract.image_to_string(screenshot)
@@ -43,10 +46,10 @@ def screen_to_text(top_left, bottom_right):
 
 def start():
     global textType
-    while(textType != "1" and textType != "2"):
-        textType = input("Enter 1 if you are using a local file, and 2 if you are using an online editor\n")
-        if(textType != "1" and textType != "2"):
-            print("Invalid input, please try again\n")
+    # while(textType != "1" and textType != "2"):
+    #     textType = input("Enter 1 if you are using a local file, and 2 if you are using an online editor\n")
+    #     if(textType != "1" and textType != "2"):
+    #         print("Invalid input, please try again\n")
 
     main()
 
@@ -65,9 +68,9 @@ def main():
             on_click=on_click,
     ) as listener:
         listener.join()
-    #while True:
-        #screen_to_text(top_left, bottom_right)
-        #time.sleep(5)
+    while True:
+        screen_to_text(top_left, bottom_right)
+        time.sleep(5)
 
     linkedList = LinkedList("Hi")
     linkedList.insertFirst("ihi")
