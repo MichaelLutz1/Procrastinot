@@ -112,7 +112,14 @@ def home():
     if (request.method == 'POST'):
         text_thread = threading.Thread(target=main)
         text_thread.start()
-    return render_template('index.html')
+    return render_template('index.html', size=[top_left, bottom_right])
+
+@app.route('/get_text', methods=['GET'])
+def get_text():
+    if (request.method == 'Get'):
+        text_thread = threading.Thread(target=main)
+        text_thread.start()
+    return screen_to_text(top_left, bottom_right)
 
 
 if __name__ == "__main__":
