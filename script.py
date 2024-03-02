@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 top_left = bottom_right = None
 textType = ""
-# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
 '''
@@ -64,7 +64,6 @@ def checkChangeRevert(linkedList, currText):
     while(currNode != None):
         similarity = Levenshtein.ratio(currText, currNode.text)
         print(similarity)
-        print(currNode.text)
         currNode = currNode.next
 
 
@@ -106,7 +105,7 @@ def main():
         pygame.display.update()
         clock.tick(30)
     '''
-    
+#start() ####
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -118,3 +117,5 @@ def home():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=2400, debug=True)
+
+
