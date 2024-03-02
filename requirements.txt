@@ -1,3 +1,6 @@
 Pillow
 pytesseract
 pynput
+levenshtein
+matplotlib
+Flask
