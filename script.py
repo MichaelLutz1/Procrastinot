@@ -1,76 +1,58 @@
-from PIL import Image, ImageGrab
-import pygame
-import pynput
+from PIL import ImageGrab
 import pytesseract
-from pynput.mouse import Button, Controller
+import time
+from pynput import mouse
+from LinkedList import LinkedList
+import Node
 
-#pygame.init()
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-
-clock = pygame.time.Clock()
-screenWidth = 1000
-screenHeight = 500
-screen = pygame.display.set_mode((screenWidth, screenHeight))
-backRect = pygame.Rect(0, 0, screenWidth, screenHeight)
-
-tempImg = pygame.image.load("screenshot.png")
-tempImg = pygame.transform.scale(tempImg, (screenWidth, screenHeight))
-
-topLeft = (-100, -100)
-bottomRight = (-100, -100)
-
+top_left = bottom_right = None
 textType = ""
+#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
+def on_click(x, y, button, pressed):
+    global top_left, bottom_right
+    if pressed and not top_left:
+        top_left = (int(x), int(y))
+        print('Top left:', top_left)
+    elif pressed and top_left and not bottom_right:
+        bottom_right = (int(x), int(y))
+        print('Bottom right:', bottom_right)
+        return False
+    if not pressed:
+        return True
+
+
+def screen_to_text(top_left, bottom_right):
+    screenshot = ImageGrab.grab(
+        bbox=(top_left[0], top_left[1], bottom_right[0], bottom_right[1]))
+    text = pytesseract.image_to_string(screenshot)
+    print(text)
 
 def start():
-    global textType, topLeft, bottomRight
+    global textType
     while(textType != "1" and textType != "2"):
         textType = input("Enter 1 if you are using a local file, and 2 if you are using an online editor\n")
         if(textType != "1" and textType != "2"):
             print("Invalid input, please try again\n")
 
-    clickCount = 0
-    while(clickCount != 2):
-        #mouse = Controller()
-        def on_click(x, y, button, pressed):
-            if(clickCount == 0):
-                topLeft = (x, y)
-                clickCount += 1
-            else:
-                bottomRight = (x, y)
-                clickCount += 1
-            if not pressed:
-                # Stop listener
-                return False
-        with pynput.mouse.Listener(on_click=on_click) as listener: listener.join()
+    main()
 
-    print(topLeft)
-    print(bottomRight)
+
+def main():
+    with mouse.Listener(
+            on_click=on_click,
+    ) as listener:
+        listener.join()
+    #while True:
+        #screen_to_text(top_left, bottom_right)
+        #time.sleep(5)
+
+    linkedList = LinkedList("1")
+    linkedList.insertFirst("2")
+    linkedList.insertFirst("3")
+    linkedList.printList()
+    linkedList.pop()
+    linkedList.printList()
+
 
 start()
-
-    
-
-
-try:
-    while(False):
-        currIndex = 0
-        x = []
-        # Take a screenshot of the entire screen
-        screenshot = ImageGrab.grab()
-
-        # Save the screenshot to a file
-        screenshot.save("screenshot.png")
-
-        # Display the screenshot
-        #screenshot.show()
-
-        imagePath = "screenshot.png"
-        image = Image.open(imagePath)
-        extractedText = pytesseract.image_to_string(image)
-        x.append(extractedText)
-
-        #screen.blit(tempImg, (0, 0))
-        #pygame.display.update()
-        #clock.tick(30)
-except KeyboardInterrupt:
-    pass
