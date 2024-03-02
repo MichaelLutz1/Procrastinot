@@ -1,16 +1,21 @@
 from PIL import ImageGrab
+from flask import Flask, render_template, request
 import pytesseract
 import pygame
 import time
+import threading
 from pynput import mouse
 from LinkedList import LinkedList
 import Node
 import Levenshtein
 import Levenshtein
 
+app = Flask(__name__)
+
 top_left = bottom_right = None
 textType = ""
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 
 '''
 pygame.init()
@@ -42,6 +47,7 @@ def screen_to_text(top_left, bottom_right):
         bbox=(top_left[0], top_left[1], bottom_right[0], bottom_right[1]))
     text = pytesseract.image_to_string(screenshot)
     return text
+
 
 def start():
     global textType
@@ -102,4 +108,13 @@ def main():
     '''
     
 
-start()
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if (request.method == 'POST'):
+        text_thread = threading.Thread(target=main)
+        text_thread.start()
+    return render_template('index.html')
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=2400, debug=True)
