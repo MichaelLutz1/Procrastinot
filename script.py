@@ -19,7 +19,7 @@ inactivityTimes = []
 linkedList = LinkedList("")
 linkedList.pop() #Pop the default empty node
 
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 def on_click(x, y, button, pressed):
     global top_left, bottom_right
@@ -100,7 +100,7 @@ def getXAxis(linkedList):
     x = []
     currNode = linkedList.getLast()
     currNode = currNode.prev
-    
+
     while(currNode != None):
         x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
         currNode = currNode.prev
@@ -134,11 +134,15 @@ def main():
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
 
+        #######################
+        '''
         temp2 = ""
         temp = getXAxis(linkedList)
         for i in range(len(temp)):
             temp2 += str(temp[i]) + " "
         print(temp2 + "\n")
+        '''
+        ############################
 
         time.sleep(sampleRate)
 
