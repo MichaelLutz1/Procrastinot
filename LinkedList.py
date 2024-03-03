@@ -25,11 +25,14 @@ class LinkedList:
         
         self.last = self.last.prev
         self.last.next = None
-        
+
         self.length -= 1
 
     def getFirst(self):
         return self.first
+    
+    def getLast(self):
+        return self.last
         
 
     def printList(self):

@@ -1,7 +1,6 @@
 from PIL import ImageGrab
 from flask import Flask, render_template, request
 import pytesseract
-import pygame
 import time
 import threading
 from pynput import mouse
@@ -17,21 +16,10 @@ textType = ""
 sampleRate = 5
 inactivityTimes = []
 
+linkedList = LinkedList("")
+linkedList.pop() #Pop the default empty node
+
 #pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-
-
-
-'''
-pygame.init()
-clock = pygame.time.Clock()
-screenWidth = 1000
-screenHeight = 500
-screen = pygame.display.set_mode((screenWidth, screenHeight))
-backRect = pygame.Rect(0, 0, screenWidth, screenHeight)
-backSurface = pygame.Surface((screenWidth, screenHeight))
-backSurface.fill((0, 0, 0))
-'''
-
 
 def on_click(x, y, button, pressed):
     global top_left, bottom_right
@@ -73,7 +61,7 @@ def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
     percentOfLength = len(currText) * .05
     while(currNode != None):
-        ####if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
+        #if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
         similarity = Levenshtein.ratio(currText, currNode.text)
         print(similarity)
         currNode = currNode.next
@@ -105,8 +93,37 @@ def printInactivityIntervals(linkedList):
         print(inactivityTimes[i][1].timeStamp - inactivityTimes[i][0].timeStamp)
     print("\n")
 
-def main():
+def getXAxis(linkedList):
+    if(linkedList.length <= 1):
+        return []
+    
+    x = []
+    currNode = linkedList.getLast()
+    currNode = currNode.prev
 
+    while(currNode != None):
+        x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
+        currNode = currNode.prev
+
+    return x
+
+def getYAxis(linkedList):
+    if(linkedList.length <= 1):
+        return []
+
+    y = []
+    currNode = linkedList.getLast()
+    currNode = currNode.prev
+
+    while(currNode != None):
+        y.append(1 - (Levenshtein.ratio(currNode.text, currNode.next.text)))
+        currNode = currNode.prev
+
+    return y
+
+
+def main():
+    global linkedList
     linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while not stop_flag.is_set():
         currText = screen_to_text(top_left, bottom_right)
@@ -116,8 +133,20 @@ def main():
         print("\n")######
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
+
+        #######################
+        '''
+        temp2 = ""
+        temp = getXAxis(linkedList)
+        for i in range(len(temp)):
+            temp2 += str(temp[i]) + " "
+        print(temp2 + "\n")
+        '''
+        ############################
+
         time.sleep(sampleRate)
 
+    '''
     linkedList = LinkedList("Hi")
     linkedList.insertFirst("ihi")
     linkedList.insertFirst("hiiiiiiiiiiiiiii")
@@ -125,24 +154,8 @@ def main():
     # linkedList.pop()
     # linkedList.printList()
     checkChangeRevert(linkedList, "hi")
-
     '''
-    running = True
-    while(True):
-        for event in pygame.event.get():
-            if(event.type == pygame.QUIT):
-                running = False
-
-        screen.blit(backSurface, (0, 0))
-        font = pygame.font.Font(None, 32)
-        text = font.render(screen_to_text(
-            top_left, bottom_right), True, "green")
-        textRect = text.get_rect()
-        screen.blit(text, textRect)
-
-        pygame.display.update()
-        clock.tick(30)
-    '''  
+   
 #start() ####
 
 
