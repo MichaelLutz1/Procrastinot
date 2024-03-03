@@ -10,9 +10,7 @@
     transition: background-color 0.3s ease;
   }
 
-  .the_background{
-    background-color: rgb(69, 64, 208);
-  }
+  
   .parent{
     background-color: green;
     margin-top: auto;
@@ -23,7 +21,5 @@
   font-weight:bold;
   font-size: 80px;
   }
-  .container{
-    background-color: green;
-  }
+
 }
