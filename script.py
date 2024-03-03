@@ -17,7 +17,11 @@ textType = ""
 sampleRate = 5
 inactivityTimes = []
 
-# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+linkedList = LinkedList("")
+linkedList.pop() #Pop the default empty node
+
+#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 
 
 '''
