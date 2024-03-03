@@ -140,9 +140,10 @@ def getGraph(linkedList):
     
     plt.savefig("graph.png", bbox_inches='tight')
 
-    #plt.show()
-    #plt.close()
+    #####plt.show()
+    ######plt.close()
 
+    #Uncomment to view image
     #im = Image.open("graph.png")
     #im.show()
 
@@ -162,12 +163,13 @@ def main():
         if(len(inactivityTimes) > tempIntervalArrayLength):
             isProcrastinating = True
 
+        getGraph(linkedList)
 
         ##########################
         print("\n")######
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
-            getGraph(linkedList)
+        
 
         #######################
         
