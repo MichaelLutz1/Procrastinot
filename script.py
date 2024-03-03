@@ -152,7 +152,7 @@ def getGraph(linkedList):
     plt.savefig("static/graph.png", bbox_inches='tight')
 
     #####plt.show()
-    ######plt.close()
+    plt.close()
 
     #Uncomment to view image
     #im = Image.open("graph.png")
