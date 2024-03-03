@@ -68,10 +68,15 @@ def start():
 
 def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
-    while (currNode != None):
-        similarity = Levenshtein.ratio(currText, currNode.text)
-        print(similarity)
+    fivePercentLength = len(currText) * .05
+    while(currNode != None):
+        if(len(currNode.text) >= len(currText) - fivePercentLength and len(currNode.text) <= len(currText) + fivePercentLength): #Check the similarity between the texts if it is within +-5% of the current length
+            similarity = Levenshtein.ratio(currText, currNode.text)
+            print(similarity)
         currNode = currNode.next
+
+def countConsecutiveSames(linkedList):
+    currNode = linkedList.getFirst()
 
 
 def main():
@@ -81,7 +86,7 @@ def main():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
-        print(currText)
+        #print(currText)
         time.sleep(5)
 
     linkedList = LinkedList("Hi")

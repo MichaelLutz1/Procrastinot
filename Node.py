@@ -1,12 +1,12 @@
-import time
+import timestamp
 class Node:
     text = ""
     timestamp = ""
     
 
-    def __init__(self, text, timestamp = time.ctime()):
+    def __init__(self, text):
         self.text = text
-        self.timestamp = timestamp
+        self.timeStamp = timestamp.TimeStamp()
 
         self.next = None
         self.prev = None
