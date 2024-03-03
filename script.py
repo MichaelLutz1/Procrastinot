@@ -19,7 +19,7 @@ inactivityTimes = []
 linkedList = LinkedList("")
 linkedList.pop() #Pop the default empty node
 
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 def on_click(x, y, button, pressed):
     global top_left, bottom_right
@@ -61,9 +61,9 @@ def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
     percentOfLength = len(currText) * .05
     while(currNode != None):
-        if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
-            similarity = Levenshtein.ratio(currText, currNode.text)
-            #print(similarity)
+        #if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
+        similarity = Levenshtein.ratio(currText, currNode.text)
+        print(similarity)
         currNode = currNode.next
 
 def countConsecutiveDuplicates(linkedList):
@@ -94,38 +94,52 @@ def printInactivityIntervals(linkedList):
     print("\n")
 
 def getXAxis(linkedList):
+    if(linkedList.length <= 1):
+        return []
+    
     x = []
-    currNode = linkedList.getFirst()
+    currNode = linkedList.getLast()
+    currNode = currNode.prev
+    
     while(currNode != None):
         x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
-        currNode = currNode.next
+        currNode = currNode.prev
 
     return x
 
 def getYAxis(linkedList):
-    y = []
     if(linkedList.length <= 1):
         return []
-    currNode = linkedList.getFirst()
-    currNode = currNode.next
+
+    y = []
+    currNode = linkedList.getLast()
+    currNode = currNode.prev
 
     while(currNode != None):
-        y.append(1 - (Levenshtein.ratio(currNode.text, currNode.prev.text)))
-        currNode = currNode.next
+        y.append(1 - (Levenshtein.ratio(currNode.text, currNode.next.text)))
+        currNode = currNode.prev
 
     return y
 
 
 def main():
+    global linkedList
     linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while not stop_flag.is_set():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
         countConsecutiveDuplicates(linkedList)
-        #print("\n")######
+        print("\n")######
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
+
+        temp2 = ""
+        temp = getXAxis(linkedList)
+        for i in range(len(temp)):
+            temp2 += str(temp[i]) + " "
+        print(temp2 + "\n")
+
         time.sleep(sampleRate)
 
     '''
