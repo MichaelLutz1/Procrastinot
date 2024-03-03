@@ -1,4 +1,4 @@
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 from flask import Flask, render_template, request, jsonify
 import pytesseract
 import time
@@ -14,7 +14,8 @@ from datetime import datetime
 app = Flask(__name__)
 stop_flag = threading.Event()
 text_thread = None
-top_left = bottom_right = None
+top_left = (0, 0)
+bottom_right = (1, 1)
 textType = ""
 sampleRate = 5
 inactivityTimes = []
@@ -143,7 +144,18 @@ def getGraph(linkedList):
 
     dates = matplotlib.dates.date2num(x)
     plt.plot_date(dates, y)
-    plt.show()
+    plt.xticks(rotation=45, ha='right')
+    plt.xlabel("Timestamp")
+    plt.ylabel("Productivity Level")
+    
+    plt.savefig("graph.png", bbox_inches='tight')
+
+    #####plt.show()
+    ######plt.close()
+
+    #Uncomment to view image
+    #im = Image.open("graph.png")
+    #im.show()
 
 
 def main():
@@ -160,11 +172,13 @@ def main():
         if (len(inactivityTimes) > tempIntervalArrayLength):
             isProcrastinating = True
 
+        getGraph(linkedList)
+
         ##########################
-        print("\n")
-        if (len(inactivityTimes) > 0):
-            printInactivityIntervals(linkedList)
-            getGraph(linkedList)
+        print("\n")######
+        if(len(inactivityTimes) > 0):######
+            printInactivityIntervals(linkedList)####
+        
 
         #######################
 
