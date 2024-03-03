@@ -8,13 +8,14 @@ from pynput import mouse
 from LinkedList import LinkedList
 import Node
 import Levenshtein
-import Levenshtein
 
 app = Flask(__name__)
 
 top_left = bottom_right = None
 textType = ""
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+sampleRate = 5
+inactivityTimes = []
 
 
 '''
@@ -61,16 +62,39 @@ def start():
 #If a chain of consecutive nodes has the same text, this is considered inactive time. Otherwise if a node has the same text as another node after having lots of variation in between, changes have been undone and the nodes between can be deleted.
 def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
-    fivePercentLength = len(currText) * .05
+    percentOfLength = len(currText) * .05
     while(currNode != None):
-        if(len(currNode.text) >= len(currText) - fivePercentLength and len(currNode.text) <= len(currText) + fivePercentLength): #Check the similarity between the texts if it is within +-5% of the current length
+        if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
             similarity = Levenshtein.ratio(currText, currNode.text)
             print(similarity)
         currNode = currNode.next
 
-def countConsecutiveSames(linkedList):
-    currNode = linkedList.getFirst()
+def countConsecutiveDuplicates(linkedList):
+    samplesUntilInactive = 5
+    currNode = linkedList.getFirst().next
+    currText = linkedList.getFirst().text
+    if(currNode == None):
+        return
+    count = 0
 
+    if(Levenshtein.ratio(currText, currNode.text) == 1.0): #Only count consecutive duplicates once a difference has been found, in order to determine the inativity interval (inactivity stops once there is a difference)
+        return 
+
+    currText = currNode.text
+    currNode = currNode.next #itterate the node and text to start comparing the duplicate texts after the first difference
+    while(currNode != None and currNode.next != None and Levenshtein.ratio(currText, currNode.text) == 1.0): #Find how many conecutive duplicates there are, and do go to the first node that has that text (the start of the inactivity period)
+        count += 1
+        currNode = currNode.next
+
+    if(count >= samplesUntilInactive):
+        currNode = currNode.prev
+        inactivityTimes.append((currNode, linkedList.getFirst())) #Append a tuple into the array of inactivity periods, with the first node having the start of the inactivity period and the second node having the end.
+    
+
+def printInactivityIntervals(linkedList):
+    for i in range(len(inactivityTimes)):
+        print(inactivityTimes[i][1].timeStamp - inactivityTimes[i][0].timeStamp)
+    print("\n")
 
 def main():
     with mouse.Listener(
@@ -83,8 +107,11 @@ def main():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
-        #print(currText)
-        time.sleep(5)
+        countConsecutiveDuplicates(linkedList)
+        print("\n")######
+        if(len(inactivityTimes) > 0):######
+            printInactivityIntervals(linkedList)####
+        time.sleep(sampleRate)
 
     linkedList = LinkedList("Hi")
     linkedList.insertFirst("ihi")
@@ -110,7 +137,7 @@ def main():
         pygame.display.update()
         clock.tick(30)
     '''
-#start() ####
+start() ####
 
 @app.route('/', methods=['GET', 'POST'])
 def home():

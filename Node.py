@@ -1,12 +1,13 @@
-import timestamp
+#import timestamp
+from datetime import datetime
 class Node:
     text = ""
     timestamp = ""
     
 
     def __init__(self, text):
+        self.timeStamp = datetime.now()
         self.text = text
-        self.timeStamp = timestamp.TimeStamp()
 
         self.next = None
         self.prev = None

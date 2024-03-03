@@ -3,6 +3,9 @@ from datetime import datetime
 
 class TimeStamp:
     def __init__(self):
+        self.timeStamp = datetime.now()
+
+        
         tempTime = str(datetime.now().strftime("%H:%M:%S")).split(":")
         self.time = (int(tempTime[0]), int(tempTime[1]), int(tempTime[2]))
 
