@@ -603,6 +603,10 @@ video {
   flex-grow: 1;
 }
 
+.resize {
+  resize: both;
+}
+
 .list-inside {
   list-style-position: inside;
 }
