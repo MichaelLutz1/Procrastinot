@@ -135,13 +135,13 @@ def main():
             printInactivityIntervals(linkedList)####
 
         #######################
-        '''
+        
         temp2 = ""
         temp = getXAxis(linkedList)
         for i in range(len(temp)):
             temp2 += str(temp[i]) + " "
         print(temp2 + "\n")
-        '''
+        
         ############################
 
         time.sleep(sampleRate)

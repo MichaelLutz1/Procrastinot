@@ -4,22 +4,4 @@
 @tailwind utilities;
 /* Your custom styles here */
 @layer components {
-  .custom-button {
-    /* Add your custom styles here */
-    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
-    transition: background-color 0.3s ease;
-  }
-
-  
-  .parent{
-    background-color: green;
-    margin-top: auto;
-  }
-  .heading{
-  text-align: center;
-  font-family:"monospace"; 
-  font-weight:bold;
-  font-size: 80px;
-  }
-
 }
