@@ -10,7 +10,20 @@
     transition: background-color 0.3s ease;
   }
 
-  .custom-button:hover {
-    background-color: #45a049; /* Darker Green */
+  .the_background{
+    background-color: rgb(69, 64, 208);
+  }
+  .parent{
+    background-color: green;
+    margin-top: auto;
+  }
+  .heading{
+  text-align: center;
+  font-family:"monospace"; 
+  font-weight:bold;
+  font-size: 80px;
+  }
+  .container{
+    background-color: green;
   }
 }
