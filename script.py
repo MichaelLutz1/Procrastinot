@@ -10,7 +10,7 @@ import Levenshtein
 import matplotlib.pyplot as plt
 import matplotlib.dates
 from datetime import datetime
-#from playsound import playsound
+from playsound import playsound
 
 app = Flask(__name__)
 stop_flag = threading.Event()
@@ -25,7 +25,7 @@ isProcrastinating = False
 linkedList = LinkedList("")
 linkedList.pop() #Pop the default empty node
 
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 def on_click(x, y, button, pressed):
     global top_left, bottom_right
@@ -163,8 +163,8 @@ def main():
         countConsecutiveDuplicates(linkedList)
         if(len(inactivityTimes) > tempIntervalArrayLength):
             isProcrastinating = True
-            #for i in range(5):
-                #playsound('/path/note.mp3')
+            for i in range(5):
+                playsound('note.mp3')
 
         getGraph(linkedList)
 
