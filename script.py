@@ -8,6 +8,7 @@ from LinkedList import LinkedList
 import Node
 import Levenshtein
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import matplotlib.dates
 from datetime import datetime
 #from playsound import playsound
@@ -133,13 +134,18 @@ def getGraph(linkedList):
     x = getXAxis(linkedList)
     y = getYAxis(linkedList)
 
-    dates = matplotlib.dates.date2num(x)
-    plt.plot_date(dates, y)
-    plt.xticks(rotation=45, ha='right')
-    plt.xlabel("Timestamp")
-    plt.ylabel("Productivity Level")
-    
-    plt.savefig("static/graph.png", bbox_inches='tight')
+    fig = go.Figure(
+        data=[go.Scatter(x=x, y=y)],
+        layout=go.Layout(
+            title="Real-Time Text Change Ratio",
+            xaxis=dict(title="Time (minutes)"),
+            yaxis=dict(title="Text Change Ratio"),
+        ),
+    )
+
+    plot_html = fig.to_html(full_html=False)
+    with open("templates/plot.html", "w") as file:
+        file.write(plot_html)
 
     #####plt.show()
     ######plt.close()
