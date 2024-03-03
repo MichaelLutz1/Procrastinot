@@ -73,9 +73,9 @@ def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
     percentOfLength = len(currText) * .05
     while(currNode != None):
-        ####if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
-        similarity = Levenshtein.ratio(currText, currNode.text)
-        print(similarity)
+        if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
+            similarity = Levenshtein.ratio(currText, currNode.text)
+            #print(similarity)
         currNode = currNode.next
 
 def countConsecutiveDuplicates(linkedList):
@@ -105,15 +105,37 @@ def printInactivityIntervals(linkedList):
         print(inactivityTimes[i][1].timeStamp - inactivityTimes[i][0].timeStamp)
     print("\n")
 
-def main():
+def getXAxis(linkedList):
+    x = []
+    currNode = linkedList.getFirst()
+    while(currNode != None):
+        x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
+        currNode = currNode.next
 
+    return x
+
+def getYAxis(linkedList):
+    y = []
+    if(linkedList.length <= 1):
+        return []
+    currNode = linkedList.getFirst()
+    currNode = currNode.next
+
+    while(currNode != None):
+        y.append(1 - (Levenshtein.ratio(currNode.text, currNode.prev.text)))
+        currNode = currNode.next
+        
+    return y
+
+
+def main():
     linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while not stop_flag.is_set():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
         countConsecutiveDuplicates(linkedList)
-        print("\n")######
+        #print("\n")######
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
         time.sleep(sampleRate)
