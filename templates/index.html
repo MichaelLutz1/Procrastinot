@@ -10,31 +10,41 @@
 	<script type="module" src="../static/js/firebase.js"></script>
 </head>
 
-<body class="the_background">
+<body class="bg-gray-900">
 	<div>
-		<div class="heading">ProcrastiNot</div>
-		<div class="text-center text-white"> Welcome to ProcrastiNot, your ultimate destination for conquering procrastination and unlocking your full potential! 
+		<h1 class="font-bold text-7xl bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text text-center">ProcrastiNot</h1>
+		<div class="text-center text-white mt-10"> Welcome to ProcrastiNot, your ultimate destination for conquering procrastination and unlocking your full potential! 
 			We understand the challenges of putting off tasks and the impact it can have on your productivity and well-being. That's why we've created a 
 			unique platform dedicated to helping you break free from the grasp of procrastination.
-			<div class="font-bold">Instructions:</div>
-			<ul class="list-disc">
-				<li class="text-white italic">Start: After pressing "Start", click the top left corner and bottom right corner of the page on your prefered text editor.
-					This will take a screenshot of your text editor and will periodicly check for inacvity. So get to work!!
+			<div class="underline underline-offset-1 font-bold text-lg mt-10">Instructions:</div>
+			<ul class="list-inside list-disc">
+				<li class="text-white italic">Start: After pressing "Start", click the top left corner and bottom right corner of the "page" on your preferred text editor (not the corner of the browser).
+					This will take a screenshot of your text editor and will periodically check for inactivity. So get to work!!
 				</li>
-				<li class="text-white italic">Stop: Hopefully you aren't procastinating and prehaps doing research, in that case press the "Stop" button and it will
-					pause the periodic checks so you aren't flag for inactivity. (Be honest, don't cheat yourself!)
+				<li class="text-white italic">Stop: Hopefully, you aren't procrastinating and perhaps doing research, in that case, press the "Stop" button and it will
+					pause the periodic checks so you aren't flagged for inactivity. (Be honest, don't cheat yourself!)
+				</li>
+				<li class="text-white italic">Resize: You may have clicked the same spot twice or didn't read what pressing "Start" did and messed up your bonds, it happens.
+					No worries, you can redo your bounds by using the "Resize" button. (Remember, top left corner and bottom right corner of your page)
 				</li>
 				
 			</ul>	
 		</div>
-		<div class="flex justify-center bg-transparent mt-36 mx-72 box-content h-128 w-128 p-4 border-4 border-black">
-			<div class="flex flex-row space-x-10">
-				<div class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Start</div>
-				<div class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Stop</div>	
-				<div class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Resize</div>
+		<div class="mx-auto flex h-65 max-w-screen-sm items-center justify-center">
+			<div class="h-36 w-full rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1">
+				<div class="flex h-full w-full items-center justify-center bg-gray-800 back">
+					<button id="start" type="button" class="mr-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white font-bold py-2 px-4 rounded">Start</button>
+					<button id="stop" type="button" class="mx-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white font-bold py-2 px-4 rounded">Stop</button>	
+					<button id="resize" type="button" class="ml-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white font-bold py-2 px-4 rounded">Resize</button>
+				</div>
 			</div>
 		</div>
-		<div class="flex justify-center mt-2 mx-48 h-96 border-4 font-mono text-xl border-black">History</div>
+		<div class="flex flex-grow justify-center mt-2 mx-48 border-4 rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1 border-black">
+			<div class="h-full w-full items-center justify-center bg-gray-800 back">
+				<div class="text-white font-mono text-xl text-center">History</div>
+				<div class="text-white font-mono text-xl text-center">An Overview of Your Activity</div>
+			</div>
+		</div>
 	</div>
 
 </body>
