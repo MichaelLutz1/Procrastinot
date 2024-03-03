@@ -16,8 +16,9 @@
 		<div class="text-center text-white"> Welcome to ProcrastiNot, your ultimate destination for conquering procrastination and unlocking your full potential! 
 			We understand the challenges of putting off tasks and the impact it can have on your productivity and well-being. That's why we've created a 
 			unique platform dedicated to helping you break free from the grasp of procrastination.
+				<div class="flex flex-col justify-center items-center">
 			<div class="font-bold">Instructions:</div>
-			<ul class="list-disc">
+			<ul class="list-inside list-disc w-2/3">
 				<li class="text-white italic">Start: After pressing "Start", click the top left corner and bottom right corner of the page on your prefered text editor.
 					This will take a screenshot of your text editor and will periodicly check for inacvity. So get to work!!
 				</li>
@@ -26,15 +27,16 @@
 				</li>
 				
 			</ul>	
+				</div>
 		</div>
-		<div class="flex justify-center bg-transparent mt-36 mx-72 box-content h-128 w-128 p-4 border-4 border-black">
+		<div class="flex justify-center bg-transparent mt-36 mx-72 box-content h-128 w-128 p-4 border-4 border-black rounded-md">
 			<div class="flex flex-row space-x-10">
-				<div class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Start</div>
-				<div class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Stop</div>	
-				<div class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Resize</div>
+				<div id="start" class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Start</div>
+				<div id="stop" class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Stop</div>	
+				<div id="resize" class="bg-rose-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Resize</div>
 			</div>
 		</div>
-		<div class="flex justify-center mt-2 mx-48 h-96 border-4 font-mono text-xl border-black">History</div>
+		<div class="flex justify-center mt-2 mx-48 h-96 border-4 font-mono text-xl border-black rounded-md">History</div>
 	</div>
 
 </body>
