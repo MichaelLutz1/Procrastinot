@@ -10,6 +10,7 @@ import Levenshtein
 import matplotlib.pyplot as plt
 import matplotlib.dates
 from datetime import datetime
+#from playsound import playsound
 
 app = Flask(__name__)
 stop_flag = threading.Event()
@@ -148,7 +149,7 @@ def getGraph(linkedList):
     plt.xlabel("Timestamp")
     plt.ylabel("Productivity Level")
     
-    plt.savefig("graph.png", bbox_inches='tight')
+    plt.savefig("static/graph.png", bbox_inches='tight')
 
     #####plt.show()
     ######plt.close()
@@ -171,22 +172,28 @@ def main():
         countConsecutiveDuplicates(linkedList)
         if (len(inactivityTimes) > tempIntervalArrayLength):
             isProcrastinating = True
+            #for i in range(5):
+                #playsound('/path/note.mp3')
 
         getGraph(linkedList)
 
         ##########################
+        '''
         print("\n")######
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
+        '''
         
 
         #######################
-
+        '''  
         temp2 = ""
         temp = getXAxis(linkedList)
         for i in range(len(temp)):
             temp2 += str(temp[i]) + " "
         print(temp2 + "\n")
+        '''
+        ############################
 
         ############################
 
