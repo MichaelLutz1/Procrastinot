@@ -1,13 +1,15 @@
 from PIL import ImageGrab
 from flask import Flask, render_template, request, jsonify
 import pytesseract
-import pygame
 import time
 import threading
 from pynput import mouse
 from LinkedList import LinkedList
 import Node
 import Levenshtein
+import matplotlib.pyplot as plt
+import matplotlib.dates
+from datetime import datetime
 
 app = Flask(__name__)
 stop_flag = threading.Event()
@@ -16,24 +18,12 @@ top_left = bottom_right = None
 textType = ""
 sampleRate = 5
 inactivityTimes = []
+isProcrastinating = False
 
 linkedList = LinkedList("")
-linkedList.pop() #Pop the default empty node
+linkedList.pop()  # Pop the default empty node
 
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-
-
-
-'''
-pygame.init()
-clock = pygame.time.Clock()
-screenWidth = 1000
-screenHeight = 500
-screen = pygame.display.set_mode((screenWidth, screenHeight))
-backRect = pygame.Rect(0, 0, screenWidth, screenHeight)
-backSurface = pygame.Surface((screenWidth, screenHeight))
-backSurface.fill((0, 0, 0))
-'''
+# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
 def on_click(x, y, button, pressed):
@@ -76,10 +66,9 @@ def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
     percentOfLength = len(currText) * .05
     while (currNode != None):
-        # Check the similarity between the texts if it is within +-5% of the current length
-        if (len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength):
-            similarity = Levenshtein.ratio(currText, currNode.text)
-            # print(similarity)
+        # if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
+        similarity = Levenshtein.ratio(currText, currNode.text)
+        print(similarity)
         currNode = currNode.next
 
 
@@ -117,44 +106,79 @@ def printInactivityIntervals(linkedList):
 
 
 def getXAxis(linkedList):
+    if (linkedList.length <= 1):
+        return []
+
     x = []
-    currNode = linkedList.getFirst()
+    currNode = linkedList.getLast()
+    currNode = currNode.prev
+
     while (currNode != None):
-        # X axis for graph is floats in minutes, with seconds as a decimal
-        x.append((1.0 * currNode.timeStamp.minute) +
-                 round((currNode.timeStamp.second / 60), 3))
-        currNode = currNode.next
+        # x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
+        # x.append(1.0 * currNode.timeStamp.hour + (currNode.timeStamp.minute / 100)) #Hours.minutes
+        x.append(currNode.timeStamp)
+        currNode = currNode.prev
 
     return x
 
 
 def getYAxis(linkedList):
-    y = []
     if (linkedList.length <= 1):
         return []
-    currNode = linkedList.getFirst()
-    currNode = currNode.next
+
+    y = []
+    currNode = linkedList.getLast()
+    currNode = currNode.prev
 
     while (currNode != None):
-        y.append(1 - (Levenshtein.ratio(currNode.text, currNode.prev.text)))
-        currNode = currNode.next
+        y.append(1 - (Levenshtein.ratio(currNode.text, currNode.next.text)))
+        currNode = currNode.prev
 
     return y
 
 
+def getGraph(linkedList):
+    x = getXAxis(linkedList)
+    y = getYAxis(linkedList)
+
+    dates = matplotlib.dates.date2num(x)
+    plt.plot_date(dates, y)
+    plt.show()
+
+
 def main():
     global linkedList
+    global isProcrastinating
     linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while not stop_flag.is_set():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
+
+        tempIntervalArrayLength = len(inactivityTimes)
         countConsecutiveDuplicates(linkedList)
-        # print("\n")######
+        if (len(inactivityTimes) > tempIntervalArrayLength):
+            isProcrastinating = True
+
+        ##########################
+        print("\n")
         if (len(inactivityTimes) > 0):
             printInactivityIntervals(linkedList)
+            getGraph(linkedList)
+
+        #######################
+
+        temp2 = ""
+        temp = getXAxis(linkedList)
+        for i in range(len(temp)):
+            temp2 += str(temp[i]) + " "
+        print(temp2 + "\n")
+
+        ############################
+
         time.sleep(sampleRate)
 
+    '''
     linkedList = LinkedList("Hi")
     linkedList.insertFirst("ihi")
     linkedList.insertFirst("hiiiiiiiiiiiiiii")
@@ -162,24 +186,8 @@ def main():
     # linkedList.pop()
     # linkedList.printList()
     checkChangeRevert(linkedList, "hi")
-
     '''
-    running = True
-    while(True):
-        for event in pygame.event.get():
-            if(event.type == pygame.QUIT):
-                running = False
 
-        screen.blit(backSurface, (0, 0))
-        font = pygame.font.Font(None, 32)
-        text = font.render(screen_to_text(
-            top_left, bottom_right), True, "green")
-        textRect = text.get_rect()
-        screen.blit(text, textRect)
-
-        pygame.display.update()
-        clock.tick(30)
-    '''
 # start() ####
 
 
