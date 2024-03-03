@@ -14,9 +14,11 @@ stop_flag = threading.Event()
 text_thread = None
 top_left = bottom_right = None
 textType = ""
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 sampleRate = 5
 inactivityTimes = []
+
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 
 
 '''
@@ -71,9 +73,9 @@ def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
     percentOfLength = len(currText) * .05
     while(currNode != None):
-        if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
-            similarity = Levenshtein.ratio(currText, currNode.text)
-            print(similarity)
+        ####if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
+        similarity = Levenshtein.ratio(currText, currNode.text)
+        print(similarity)
         currNode = currNode.next
 
 def countConsecutiveDuplicates(linkedList):
@@ -141,7 +143,7 @@ def main():
         pygame.display.update()
         clock.tick(30)
     '''  
-    # start() ####
+#start() ####
 
 
 @app.route('/', methods=['GET', 'POST'])
