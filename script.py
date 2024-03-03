@@ -17,6 +17,9 @@ textType = ""
 sampleRate = 5
 inactivityTimes = []
 
+linkedList = LinkedList("")
+linkedList.pop() #Pop the default empty node
+
 #pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
@@ -124,7 +127,7 @@ def getYAxis(linkedList):
     while(currNode != None):
         y.append(1 - (Levenshtein.ratio(currNode.text, currNode.prev.text)))
         currNode = currNode.next
-        
+
     return y
 
 
