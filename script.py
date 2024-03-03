@@ -7,6 +7,9 @@ from pynput import mouse
 from LinkedList import LinkedList
 import Node
 import Levenshtein
+import matplotlib.pyplot as plt
+import matplotlib.dates
+from datetime import datetime
 
 app = Flask(__name__)
 stop_flag = threading.Event()
@@ -15,6 +18,7 @@ top_left = bottom_right = None
 textType = ""
 sampleRate = 5
 inactivityTimes = []
+isProcrastinating = False
 
 linkedList = LinkedList("")
 linkedList.pop() #Pop the default empty node
@@ -102,7 +106,9 @@ def getXAxis(linkedList):
     currNode = currNode.prev
 
     while(currNode != None):
-        x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
+        #x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
+        #x.append(1.0 * currNode.timeStamp.hour + (currNode.timeStamp.minute / 100)) #Hours.minutes
+        x.append(currNode.timeStamp)
         currNode = currNode.prev
 
     return x
@@ -121,28 +127,47 @@ def getYAxis(linkedList):
 
     return y
 
+def getGraph(linkedList):
+    x = getXAxis(linkedList)
+    y = getYAxis(linkedList)
+
+    dates = matplotlib.dates.date2num(x)
+    plt.plot_date(dates, y)
+    plt.show()
+
+
 
 def main():
     global linkedList
+    global isProcrastinating
     linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while not stop_flag.is_set():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
+
+        tempIntervalArrayLength = len(inactivityTimes)
         countConsecutiveDuplicates(linkedList)
+        if(len(inactivityTimes) > tempIntervalArrayLength):
+            isProcrastinating = True
+
+
+        ##########################
         print("\n")######
         if(len(inactivityTimes) > 0):######
             printInactivityIntervals(linkedList)####
+            getGraph(linkedList)
 
         #######################
-        '''
+        
         temp2 = ""
         temp = getXAxis(linkedList)
         for i in range(len(temp)):
             temp2 += str(temp[i]) + " "
         print(temp2 + "\n")
-        '''
+        
         ############################
+
 
         time.sleep(sampleRate)
 
