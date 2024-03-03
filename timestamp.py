@@ -3,10 +3,10 @@ from datetime import datetime
 
 class TimeStamp:
     def __init__(self):
-        tempTime = datetime.now().strftime("%H:%M:%S").split(":")
+        tempTime = str(datetime.now().strftime("%H:%M:%S")).split(":")
         self.time = (int(tempTime[0]), int(tempTime[1]), int(tempTime[2]))
 
-        tempDate = datetime.now()[0:11].split("-")
+        tempDate = str(datetime.now())[0:11].split("-")
         self.date = (int(tempDate[0]), int(tempDate[1]), int(tempDate[2]))
 
     def getTime(self):

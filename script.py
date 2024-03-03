@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 top_left = bottom_right = None
 textType = ""
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
 '''
@@ -105,7 +105,7 @@ def main():
         pygame.display.update()
         clock.tick(30)
     '''
-#start() ####
+start() ####
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
