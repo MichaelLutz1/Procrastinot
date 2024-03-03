@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 top_left = bottom_right = None
 textType = ""
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
 '''
@@ -61,10 +61,15 @@ def start():
 #If a chain of consecutive nodes has the same text, this is considered inactive time. Otherwise if a node has the same text as another node after having lots of variation in between, changes have been undone and the nodes between can be deleted.
 def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
+    fivePercentLength = len(currText) * .05
     while(currNode != None):
-        similarity = Levenshtein.ratio(currText, currNode.text)
-        print(similarity)
+        if(len(currNode.text) >= len(currText) - fivePercentLength and len(currNode.text) <= len(currText) + fivePercentLength): #Check the similarity between the texts if it is within +-5% of the current length
+            similarity = Levenshtein.ratio(currText, currNode.text)
+            print(similarity)
         currNode = currNode.next
+
+def countConsecutiveSames(linkedList):
+    currNode = linkedList.getFirst()
 
 
 def main():
@@ -78,7 +83,7 @@ def main():
         currText = screen_to_text(top_left, bottom_right)
         checkChangeRevert(linkedList, currText)
         linkedList.insertFirst(currText)
-        print(currText)
+        #print(currText)
         time.sleep(5)
 
     linkedList = LinkedList("Hi")
@@ -105,7 +110,7 @@ def main():
         pygame.display.update()
         clock.tick(30)
     '''
-start() ####
+#start() ####
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
