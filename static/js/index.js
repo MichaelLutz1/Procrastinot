@@ -11,14 +11,14 @@ window.onload = () => {
 		const res = await fetch('/get_text?active=false')
 		console.log(res)
 	});
-	console.log(resizeButton)
 	resizeButton.addEventListener('click', async () => {
 		const res = await fetch('/resize')
 		console.log(res)
 	});
 	graphButton.addEventListener('click', async () => {
-		const res = await fetch('/graph_data')
-		const data = await res.json()
-		console.log(data)
+		// const res = await fetch('/graph_data')
+		// const data = await res.json()
+		// console.log(data)
+		location.reload()
 	});
 }
