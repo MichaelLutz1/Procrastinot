@@ -143,6 +143,7 @@ def getYAxis(linkedList):
 
 
 def main():
+    global linkedList
     linkedList = LinkedList(screen_to_text(top_left, bottom_right))
     while not stop_flag.is_set():
         currText = screen_to_text(top_left, bottom_right)
@@ -192,8 +193,8 @@ def home():
 
 @app.route('/graph_data', methods=['GET'])
 def graph_data():
-    x = getXAxis()
-    y = getYAxis()
+    x = getXAxis(linkedList)
+    y = getYAxis(linkedList)
     return jsonify({'x': x, 'y': y})
 
 
