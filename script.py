@@ -1,7 +1,6 @@
 from PIL import ImageGrab
 from flask import Flask, render_template, request
 import pytesseract
-import pygame
 import time
 import threading
 from pynput import mouse
