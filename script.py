@@ -1,5 +1,5 @@
 from PIL import ImageGrab, Image
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import pytesseract
 import time
 import threading
@@ -8,7 +8,6 @@ from LinkedList import LinkedList
 import Node
 import Levenshtein
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 import matplotlib.dates
 from datetime import datetime
 from playsound import playsound
@@ -24,7 +23,7 @@ inactivityTimes = []
 isProcrastinating = False
 
 linkedList = LinkedList("")
-linkedList.pop() #Pop the default empty node
+linkedList.pop()  # Pop the default empty node
 
 ########Uncomment the line below to run on Windows!!!
 #pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
@@ -68,93 +67,96 @@ def start():
 def checkChangeRevert(linkedList, currText):
     currNode = linkedList.getFirst()
     percentOfLength = len(currText) * .05
-    while(currNode != None):
-        #if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
+    while (currNode != None):
+        # if(len(currNode.text) >= len(currText) - percentOfLength and len(currNode.text) <= len(currText) + percentOfLength): #Check the similarity between the texts if it is within +-5% of the current length
         similarity = Levenshtein.ratio(currText, currNode.text)
         print(similarity)
         currNode = currNode.next
+
 
 def countConsecutiveDuplicates(linkedList):
     samplesUntilInactive = 5
     currNode = linkedList.getFirst().next
     currText = linkedList.getFirst().text
-    if(currNode == None):
+    if (currNode == None):
         return
     count = 0
 
-    if(Levenshtein.ratio(currText, currNode.text) == 1.0): #Only count consecutive duplicates once a difference has been found, in order to determine the inativity interval (inactivity stops once there is a difference)
-        return 
+    # Only count consecutive duplicates once a difference has been found, in order to determine the inativity interval (inactivity stops once there is a difference)
+    if (Levenshtein.ratio(currText, currNode.text) == 1.0):
+        return
 
     currText = currNode.text
-    currNode = currNode.next #itterate the node and text to start comparing the duplicate texts after the first difference
-    while(currNode != None and currNode.next != None and Levenshtein.ratio(currText, currNode.text) == 1.0): #Find how many conecutive duplicates there are, and do go to the first node that has that text (the start of the inactivity period)
+    # itterate the node and text to start comparing the duplicate texts after the first difference
+    currNode = currNode.next
+    # Find how many conecutive duplicates there are, and do go to the first node that has that text (the start of the inactivity period)
+    while (currNode != None and currNode.next != None and Levenshtein.ratio(currText, currNode.text) == 1.0):
         count += 1
         currNode = currNode.next
 
-    if(count >= samplesUntilInactive):
+    if (count >= samplesUntilInactive):
         currNode = currNode.prev
-        inactivityTimes.append((currNode, linkedList.getFirst())) #Append a tuple into the array of inactivity periods, with the first node having the start of the inactivity period and the second node having the end.
-    
+        # Append a tuple into the array of inactivity periods, with the first node having the start of the inactivity period and the second node having the end.
+        inactivityTimes.append((currNode, linkedList.getFirst()))
+
 
 def printInactivityIntervals(linkedList):
     for i in range(len(inactivityTimes)):
-        print(inactivityTimes[i][1].timeStamp - inactivityTimes[i][0].timeStamp)
+        print(inactivityTimes[i][1].timeStamp -
+              inactivityTimes[i][0].timeStamp)
     print("\n")
 
+
 def getXAxis(linkedList):
-    if(linkedList.length <= 1):
+    if (linkedList.length <= 1):
         return []
-    
+
     x = []
     currNode = linkedList.getLast()
     currNode = currNode.prev
 
-    while(currNode != None):
-        #x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
-        #x.append(1.0 * currNode.timeStamp.hour + (currNode.timeStamp.minute / 100)) #Hours.minutes
+    while (currNode != None):
+        # x.append((1.0 * currNode.timeStamp.minute) + round((currNode.timeStamp.second / 60), 3)) #X axis for graph is floats in minutes, with seconds as a decimal
+        # x.append(1.0 * currNode.timeStamp.hour + (currNode.timeStamp.minute / 100)) #Hours.minutes
         x.append(currNode.timeStamp)
         currNode = currNode.prev
 
     return x
 
+
 def getYAxis(linkedList):
-    if(linkedList.length <= 1):
+    if (linkedList.length <= 1):
         return []
 
     y = []
     currNode = linkedList.getLast()
     currNode = currNode.prev
 
-    while(currNode != None):
+    while (currNode != None):
         y.append(1 - (Levenshtein.ratio(currNode.text, currNode.next.text)))
         currNode = currNode.prev
 
     return y
 
+
 def getGraph(linkedList):
     x = getXAxis(linkedList)
     y = getYAxis(linkedList)
 
-    fig = go.Figure(
-        data=[go.Scatter(x=x, y=y)],
-        layout=go.Layout(
-            title="Real-Time Text Change Ratio",
-            xaxis=dict(title="Time (minutes)"),
-            yaxis=dict(title="Text Change Ratio"),
-        ),
-    )
-
-    plot_html = fig.to_html(full_html=False)
-    with open("templates/plot.html", "w") as file:
-        file.write(plot_html)
+    dates = matplotlib.dates.date2num(x)
+    plt.plot_date(dates, y)
+    plt.xticks(rotation=45, ha='right')
+    plt.xlabel("Timestamp")
+    plt.ylabel("Productivity Level")
+    
+    plt.savefig("static/graph.png", bbox_inches='tight')
 
     #####plt.show()
-    ######plt.close()
+    plt.close()
 
     #Uncomment to view image
     #im = Image.open("graph.png")
     #im.show()
-
 
 
 def main():
@@ -168,7 +170,7 @@ def main():
 
         tempIntervalArrayLength = len(inactivityTimes)
         countConsecutiveDuplicates(linkedList)
-        if(len(inactivityTimes) > tempIntervalArrayLength):
+        if (len(inactivityTimes) > tempIntervalArrayLength):
             isProcrastinating = True
             for i in range(5):
                 playsound('note.mp3')
@@ -193,6 +195,7 @@ def main():
         '''
         ############################
 
+        ############################
 
         time.sleep(sampleRate)
 
@@ -205,8 +208,8 @@ def main():
     # linkedList.printList()
     checkChangeRevert(linkedList, "hi")
     '''
-   
-#start() ####
+
+# start() ####
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -215,6 +218,13 @@ def home():
         return render_template('index.html')
     else:
         return render_template('index.html')
+
+
+@app.route('/graph_data', methods=['GET'])
+def graph_data():
+    x = getXAxis(linkedList)
+    y = getYAxis(linkedList)
+    return jsonify({'x': x, 'y': y})
 
 
 @app.route('/get_text', methods=['GET'])
