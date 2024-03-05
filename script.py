@@ -25,8 +25,7 @@ isProcrastinating = False
 linkedList = LinkedList("")
 linkedList.pop()  # Pop the default empty node
 
-# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-
+########Uncomment the line below to run on Windows!!!
 #pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 def on_click(x, y, button, pressed):
