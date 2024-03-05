@@ -611,8 +611,24 @@ video {
   list-style-position: inside;
 }
 
+.w-2\/3 {
+  width: 66.666667%;
+}
+
+.list-inside {
+  list-style-position: inside;
+}
+
 .list-disc {
   list-style-type: disc;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.flex-col {
+  flex-direction: column;
 }
 
 .items-center {
